@@ -1,0 +1,5 @@
+# return
+__return__() {
+return 105
+}
+__return__
