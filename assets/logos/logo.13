@@ -1,0 +1,11 @@
+
+SL() {
+sleep 0.01
+}
+
+printf "\n\e[7;38;2;255;125;40m#include\e[0m \e[38;2;255;0;10m<\e[0mstdio\e[38;2;255;0;10m.\e[0mh\e[38;2;255;0;10m>\e[0m\n";SL
+printf "\e[38;2;0;200;255mint\e[0m main()\n";SL
+printf "{\n";SL
+printf "   printf(\e[38;2;255;255;40m\"Welcome to Psfconsole!\"\e[0m)\e[38;2;255;0;10m;\e[0m\n";SL
+printf "   \e[38;2;255;0;10mreturn\e[38;2;140;130;255m 0\e[38;2;255;0;10m;\e[0m\n";SL
+printf "\e[0m}\e[0m\n\n";SL
