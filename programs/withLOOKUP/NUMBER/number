@@ -1,0 +1,55 @@
+#!/bin/bash
+
+read -p $'\e[4mpsf\e[0m set(\e[91mnumber/api/key\e[0m) > ' api
+if [[ $api == "set "* ]]
+then
+API="${api#set }"
+fi
+
+read -p $'\e[4mpsf\e[0m set(\e[91mlookup/number\e[0m) > ' number
+if [[ $number == "set "* ]]
+then
+NUMBER="${number#set }"
+fi
+
+read -p $'\e[4mpsf\e[0m set(\e[91mnumber/country/shortname\e[0m) > ' code
+if [[ $code == "set "* ]]
+then
+CODE="${code#set }"
+fi
+
+output=$(curl -sL "http://apilayer.net/api/validate?access_key=$API&number=$NUMBER&country_code=$CODE&format=2" | jq .)
+valid=$(printf "${output}" | tr -d '{"},' | grep -a 'valid' | awk '{print $2}')
+
+invalid=$(printf "${output}" | grep -o 'invalid_access_key')
+missing=$(printf "${output}" | grep -o 'missing_access_key')
+
+if [[ ${missing} == "missing_access_key" ]]
+then
+echo -e "\e[91m(\e[0m!\e[91m)\e[0m Missing api key."
+fi
+
+if [[ ${#NUMBER} -lt 1 ]]
+then
+echo -e "\e[91m(\e[0m!\e[91m)\e[0m Missing phone number."
+fi
+
+if [[ ${#CODE} -lt 1 ]]
+then
+echo -e "\e[91m(\e[0m!\e[91m)\e[0m Missing country shortname."
+exit 1
+fi
+
+if [[ ! ${valid} == "true" ]]
+then
+echo -e "\e[91m(\e[0m!\e[91m)\e[0m Invalid phone number."
+fi
+
+if [[ ${invalid} != "invalid_access_key" ]]
+then
+printf "${output}\n" | tr -d '{"},'
+else
+echo -e "\e[91m(\e[0m!\e[91m)\e[0m Invalid api key."
+echo -e "\e[92m(\e[0m>\e[92m)\e[0m Get api key from \e[4mhttps://numverify.com/product\e[0m"
+exit 1
+fi
