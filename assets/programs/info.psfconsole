@@ -1,0 +1,60 @@
+#!/bin/bash
+
+aboutMOFULES() {
+if [[ $MODE == "withPHISH/OTPWEB" ]]
+then
+   INFO=$(printf "module to run with:otp phishing sites.")
+
+elif [[ $MODE == "withPHISH/NOTPWEB" ]]
+then
+   INFO=$(printf "module to run with:notp phishing sites.")
+
+elif [[ $MODE == "withPHISH/GPSWEB" ]]
+then
+   INFO=$(printf "module to create geolocation phishing sites.")
+
+elif [[ $MODE == "withPHISH/CAMWEB" ]]
+then
+   INFO=$(printf "module to create camera phishing sites.")
+
+elif [[ $MODE == "withPHISH/MICWEB" ]]
+then
+   INFO=$(printf "module to create microphone phishing sites.")
+
+elif [[ $MODE == "withBOMBER/CALLNSMS" ]]
+then
+   INFO=$(printf "module to perform a bombing attack.")
+
+elif [[ $MODE == "withLOOKUP/USER" ]]
+then
+   INFO=$(printf "module to gather information of users.")
+
+elif [[ $MODE == "withLOOKUP/NUMBER" ]]
+then
+   INFO=$(printf "module to gather information of numbers.")
+
+elif [[ $MODE == "withREMOTE/PAYLOAD" ]]
+then
+   INFO=$(printf "module to create a metasploit payload\n  for your target devices.")
+
+elif [[ $MODE == "withBRUTE/SOCIAL" ]]
+then
+   INFO=$(printf "module to perform social bruteforce attack.")
+
+elif [[ $MODE == "withBRUTE/HASHES" ]]
+then
+   INFO=$(printf "module to perform hashes bruteforce attack.")
+
+elif [[ $MODE == "withATTACK/DDOS" ]]
+then
+   INFO=$(printf "module to perform ddos attack on sites.")
+
+elif [[ $MODE == "withSECURE/HASHES" ]]
+then
+   INFO=$(printf "module to generate hashing algorithm.")
+
+elif [[ $MODE == "withSECURE/PASSWD" ]]
+then
+   INFO=$(printf "module to generate strong passwords.")
+fi
+}
