@@ -1,0 +1,12 @@
+#!/bin/bash
+
+printf "Only international format allow eg. +91******.\n"
+
+read -p $'\033[4mpsf\033[0m set(\033[91msms/number\033[0m) > ' number
+read -p $'\033[4mpsf\033[0m set(\033[91msms/text\033[0m) > ' text
+
+curl -X POST https://textbelt.com/text \
+   --data-urlencode phone="$number" \
+   --data-urlencode message="$text" \
+   -d key=textbelt
+echo

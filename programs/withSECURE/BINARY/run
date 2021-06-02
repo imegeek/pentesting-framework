@@ -1,0 +1,15 @@
+#!/bin/bash
+
+main() {
+if [[ $__return__ == 105 ]];then
+cd $TMPDIR || exit 1
+printf "${b0SIGN} Downloading Program...   \r"
+curl -sLO $RAWLINK/programs/withSECURE/BINARY/binary.py
+else
+cd $CWD/programs/withSECURE/BINARY &> /dev/null
+fi
+}
+
+main
+  read -r -p $'\e[4mpsf\e[0m set(\e[91mbinary/string\e[0m) > ' string
+  python3 binary.py -a "${string}"
