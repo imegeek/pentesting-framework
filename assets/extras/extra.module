@@ -1,0 +1,10 @@
+#!/bin/bash
+
+extra()
+{
+printf "use :${1}/handler"
+}
+
+extraMODULES=(
+    "$(extra mmm/sss)"
+)
